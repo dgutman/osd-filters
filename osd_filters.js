@@ -1,6 +1,39 @@
 /* This module injects HTML code to set up SVG color filtering */
 
 
+/* 
+Image Magic Commands from Noel to try and recreate
+
+http://www.smashingmagazine.com/2015/05/why-the-svg-filter-is-awesome/
+
+
+http://html5-demos.appspot.com/static/css/filters/index.html
+
+convert $INPUTFILE -dither None -fx '0.2*r+0.2*g+0.6*b' -auto-level -negate -sharpen 11x9 -brightness-contrast 0x10 ${OUTPUTROOT}$INPUTROOT.BLUE_ENHANCED.png
+
+convert $INPUTFILE -dither None -fx '0.7*r+0.2*g+0.1*b' -auto-level -negate -sharpen 11x9 -brightness-contrast 0x10 ${OUTPUTROOT}$INPUTROOT.RED_ENHANCED.png
+*/ 
+
+    function changeFilter(filter, val, spanItem) {
+        flt[filter] = val;
+        $(spanItem).html(val);
+        updateFilters();
+    }
+
+    function updateFilters() {
+        //http://www.html5rocks.com/en/tutorials/filters/understanding-css/
+        console.log(flt);
+
+        if (flt.blur > 1) {
+            //var css = 'contrast(' + flt.contrast + '%) brightness(' + flt.brightness + '%) url(#f3) hue-rotate(' + flt.hue_rotate + 'deg) saturate(' + flt.saturate + '%)';
+            var css = 'contrast(' + flt.contrast + '%) brightness(' + flt.brightness + '%) url(#f3) hue-rotate(' + flt.hue_rotate + 'deg) saturate(' + flt.saturate + '%)' + ' blur(' + flt.blur + 'px)' + ' invert(' + flt.invert + '%)';
+
+        } else {
+            var css = 'contrast(' + flt.contrast + '%) brightness(' + flt.brightness + '%) url(#f3) hue-rotate(' + flt.hue_rotate + 'deg) saturate(' + flt.saturate + '%)' + ' invert(' + flt.invert + '%)';
+        }
+
+        $('.magic').css('-webkit-filter', css);
+    }
 
 
 color_filter_html = `<div id="filter_dialog" title="Apply Filters">
@@ -59,4 +92,20 @@ color_filter_html = `<div id="filter_dialog" title="Apply Filters">
         flt.blur = 0;
         </script>
         <br>
+
+        <div style="width:200px">Sharpen (<a href=# onclick="$('#set_sharpen').val(0);
+                        $('#set_sharpen').change();
+                        return false">reset</a>)</div>
+        <input id=set_sharpen type=range min=0 max=10 value=0 onchange="changeFilter('sharpen', this.value, $(this).next())">
+        <span>0</span>px
+        <script>
+        flt.sharpen = 0;
+        </script>
+        <br>
+
+
+
     </div>`
+
+
+

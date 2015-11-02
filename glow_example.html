@@ -1,0 +1,231 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Glow Filter</title>
+
+<style>
+svg {
+  font-family: sans-serif;
+  font-weight: bold;
+}
+
+
+.four {
+-webkit-filter: hue-rotate(72deg)
+}
+
+.five {
+  -webkit-filter: url("#filterHighlightBlue");
+
+}
+
+.six {
+  -webkit-filter: url("#colorMeHueRotate");
+
+}
+
+
+.seven {
+    -webkit-filter: url("#colorMeMatrix");
+
+}
+
+.invert_colors {
+
+  -webkit-filter: url("#invert");
+
+}
+
+.magic 
+  {
+
+
+
+  }
+
+</style>
+
+<script src="http://mbostock.github.com/d3/d3.js?2.9.6"></script>
+<script src="glow.js"></script>
+<script src="https://code.jquery.com/jquery-2.1.4.js"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"></script>
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="osd_filters.js"></script>
+
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+
+<body>
+<script> 
+
+var flt = {};
+
+</script>
+
+<img id="main_img"  src="">
+<img id="ibm_blue_img"  src="">
+
+ <input type="button" id="show_filter" value="Apply Filters" class="btn btn-small btn-inverse" >
+
+<span id="filter_target" class="tgt_cls">
+<img id="filtered_img" src="" class="magic">
+</span>
+ 
+
+ <div id="filter_dialog" title="Apply Filters">
+</div>
+<script>
+//https://gist.github.com/wbzyl/3131918
+
+/* convert $INPUTFILE -dither None -fx '0.2*r+0.2*g+0.6*b' -auto-level -negate -sharpen 11x9 -brightness-contrast 0x10 ${OUTPUTROOT}$INPUTROOT.BLUE_ENHANCED.png
+
+convert $INPUTFILE -dither None -fx '0.7*r+0.2*g+0.1*b' -auto-level -negate -sharpen 11x9 -brightness-contrast 0x10 ${OUTPUTROOT}$INPUTROOT.RED_ENHANCED.png */
+
+
+$( document ).ready(function() {
+    console.log( "ready!" );
+
+ $("#filter_dialog").dialog({
+            autoOpen: false,
+            width: 'auto'
+        });
+ $('#show_filter').click(function() {
+            $('#filter_dialog').dialog('open');
+            return false;
+        });
+
+$("#filter_dialog").html(color_filter_html);
+
+
+});
+
+
+
+var ex_img_sets = [   {'img_name': 'ISIC_MSK1.0_BRIS1011' ,  
+      'orig': 'img_sets/ISIC_MSK1.0_BRIS1011_UNK_UNK_UNK.9af7773dba369897edb8597b873e4e79..0RIG.png',
+      'red': 'img_sets/ISIC_MSK1.0_BRIS1011_UNK_UNK_UNK.9af7773dba369897edb8597b873e4e79..RED_ENHANCED.png',
+     'blue': 'img_sets/ISIC_MSK1.0_BRIS1011_UNK_UNK_UNK.9af7773dba369897edb8597b873e4e79.BLUE_ENHANCED.png'
+        }
+    ]
+
+$("#main_img").attr('src',ex_img_sets[0].orig)
+$("#ibm_blue_img").attr('src',ex_img_sets[0].blue)
+
+
+$("#filtered_img").attr('src',ex_img_sets[0].orig)
+
+var myGlow = glow("myGlow").rgb("#0f0").stdDeviation(4);
+/* var svg = d3.select("body")
+  .append("svg")
+    .attr("width", 600)
+    .attr("height", 200)
+  .call(myGlow);
+svg.append("text")
+    .attr("x", 50).attr("y", 100)
+    .attr("font-size", "48px")
+    .attr("fill", "#0f0")
+    .text("Spring Flower")
+    .style("filter", "url(#myGlow)");
+svg.append("circle")
+    .attr("cx", 450).attr("cy", 85)
+    .attr("r", 50)
+    .attr("fill", "#ff0")
+    .style("filter", "url(#my
+    Glow)");*/
+
+  //$('.openseadragon-canvas').css('-webkit-filter', css);
+
+//$("#filtered_img").css('-webkit-filter','url("#colorMeSaturate")')  TIS WORKED
+
+
+</script>
+
+<svg 
+ preserveAspectRatio="xMidYMid meet"
+ xmlns="http://www.w3.org/2000/svg"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+
+
+
+ 
+
+ <filter id="filterHighlightBlue">
+    <feColorMatrix in="SourceGraphic"
+    type="matrix"
+    values="  0.2 0.2 0   1 0
+              0   0.2 0   1 0
+              0   0   0.6 1 0
+              0   0   0   1 0" />
+</filter>
+
+
+<filter id="invert">
+<feColorMatrix in="SourceGraphic" type="matrix" values="-1 0 0 0 1 
+                                                              0 -1 0 0 1 
+                                                              0 0 -1 0 1
+                                                              0 0 0 1 0"/>
+</filter>
+
+ <filter id="colorMeHueRotate">
+    <feColorMatrix in="SourceGraphic"
+      type="hueRotate"
+      values="180" />
+  </filter>
+
+<filter id="colorMeMatrix">
+    <feColorMatrix in="SourceGraphic"
+      type="matrix"
+      values="0 0 0 0 0
+              1 1 1 1 0
+              0 0 0 0 0
+              0 0 0 1 0" />
+  </filter>
+
+<filter id="sharpenthree">
+   <feConvolveMatrix order="3,3" kernelMatrix=
+   "1 0 0 
+   0 0 0
+   0 0 1" in="SourceGraphic" />
+</filter>
+
+<filter id="extremeEffect">
+  <feConvolveMatrix order="5" kernelMatrix="1 1 1 1 1 1 -2 -2 -2 1 1  -2 .01 -2 1 1 -2 -2 -2 1 1 1 1 1 1"/>
+  <feColorMatrix type="luminanceToAlpha"/>
+</filter>
+
+
+<filter id="sharpenthree">
+  <feConvolveMatrix order="3" kernelMatrix="1 -1 1 -1 -1 -1 1 -1 1"/>
+</filter>
+
+
+<filter id="sharpenfive">
+  <feConvolveMatrix order="5" kernelMatrix="
+    -1 -1 -1 -1 -1
+    -1  2  2  2 -1
+    -1  2  8  2 -1
+    -1  2  2  2 -1
+    -1 -1 -1 -1 -1"/>
+</filter>
+
+
+
+<filter id="sharpenseven">
+  <feConvolveMatrix order="7" kernelMatrix="
+    -1 -1 -1 -1 -1 -1 -1 
+    -1 -1 -1 -1 -1 -1 -1
+    -1 -1  2 2  2  -1 -1
+    -1 -1  2 8 2  -1 -1 
+    -1 -1  2 2  2  -1 -1 
+    -1 -1 -1 -1 -1 -1 -1 
+    -1 -1 -1 -1 -1 -1 -1 
+    "/>
+</filter>
+
+
+
+
+</svg>
+
+ </body>
