@@ -14,6 +14,8 @@ convert $INPUTFILE -dither None -fx '0.2*r+0.2*g+0.6*b' -auto-level -negate -sha
 convert $INPUTFILE -dither None -fx '0.7*r+0.2*g+0.1*b' -auto-level -negate -sharpen 11x9 -brightness-contrast 0x10 ${OUTPUTROOT}$INPUTROOT.RED_ENHANCED.png
 */ 
 
+var flt = {} ;  //this stores the parameters I chose for the filter set
+
     function changeFilter(filter, val, spanItem) {
         flt[filter] = val;
         $(spanItem).html(val);
@@ -33,6 +35,7 @@ convert $INPUTFILE -dither None -fx '0.7*r+0.2*g+0.1*b' -auto-level -negate -sha
         }
 
         $('.magic').css('-webkit-filter', css);
+        $('.openseadragon-canvas').css('-webkit-filter', css);
     }
 
 
